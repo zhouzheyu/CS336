@@ -2,7 +2,7 @@
 
 ## 基本介绍
 
-![image-20251013171058814](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013171058814.png)
+![image-20251013171058814](media/4-1.png)
 
 优点：
 
@@ -16,17 +16,17 @@
 * 路由选择的训练并不是可微分的，这一目标的训练，要么是启发式的，要么是不稳定的。
   * 所谓“启发式”就是指这些设计更多是试探性和经验性的，没有严格的理论最优性证明。比如负载均衡损失（load balancing loss）或路由正则化项，用来鼓励路由器均匀使用专家、避免塌缩。
 
-![image-20251013172954376](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013172954376.png)
+![image-20251013172954376](media/4-2.png)
 
 ## Routing function
 
 最常用的是Token chooses expert
 
-![image-20251013173358935](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013173358935.png)
+![image-20251013173358935](media/4-3.png)
 
-![image-20251013173539457](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013173539457.png)
+![image-20251013173539457](media/4-4.png)
 
-![image-20251013173603043](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013173603043.png)
+![image-20251013173603043](media/4-5.png)
 
 ### Top-K routing
 
@@ -40,7 +40,7 @@ softmax实际上的作用是归一化。
 
 一般都会用残差结构，保证梯度流恒定。
 
-![image-20251013173714640](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013173714640.png)
+![image-20251013173714640](media/4-6.png)
 
 ### variations
 
@@ -52,9 +52,9 @@ softmax实际上的作用是归一化。
   * 需要shared FFN来处理所有的token的公共知识。
 * 根据activated FFN的数量，和每个FFN size大小，换算成对应dense layer的FLOPs的多少倍。
 
-![image-20251013174056419](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013174056419.png)
+![image-20251013174056419](media/4-7.png)
 
-![image-20251013175624129](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013175624129.png)
+![image-20251013175624129](media/4-8.png)
 
 ## Training objectives
 
@@ -64,7 +64,7 @@ softmax实际上的作用是归一化。
 
 RL is the ‘right solution’ but gradient variances and complexity means it’s not widely used.
 
-![image-20251013175826727](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013175826727.png)
+![image-20251013175826727](media/4-9.png)
 
 ### Stochastic perturbations
 
@@ -72,7 +72,7 @@ RL is the ‘right solution’ but gradient variances and complexity means it’
 
 加入噪声依旧不可微分，但在梯度下降的时候会引入一些信号。
 
-![image-20251013180623775](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013180623775.png)
+![image-20251013180623775](media/4-10.png)
 
 ### Heuristic/loading balancing losses
 
@@ -81,9 +81,9 @@ RL is the ‘right solution’ but gradient variances and complexity means it’
 * $f_i$：expert $i$ 分配得到的token的百分比。
 * $P_i$：router 分配给 expert $i$ 的概率期望。
 
-![image-20251013181416252](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013181416252.png)
+![image-20251013181416252](media/4-11.png)
 
-![image-20251013181518989](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013181518989.png)
+![image-20251013181518989](media/4-12.png)
 
 #### per-expert biases
 
@@ -93,19 +93,19 @@ DeepSeek v3 variation采用的方法。
 
 没得到足够token，$b_i$更高，更有希望选择这个。
 
-![image-20251013181532544](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013181532544.png)
+![image-20251013181532544](media/4-13.png)
 
 #### 实验效果
 
 路由experts更均匀，每个token都能找到更合适自己的expert，loss更小，训练效果更好。
 
-![image-20251013182011359](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013182011359.png)
+![image-20251013182011359](media/4-14.png)
 
 MoE can parallellize device nicely.
 
-![image-20251013220945619](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013220945619.png)
+![image-20251013220945619](media/4-15.png)
 
-![image-20251013221036657](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013221036657.png)
+![image-20251013221036657](media/4-16.png)
 
 ## issues
 
@@ -113,15 +113,15 @@ MoE can parallellize device nicely.
 
 MoE models具有随机性，路由（routing）和容量计算都是在整个 batch 维度上进行的，如果很多其他人的token和我的都路由到同一个FFN，而当前FFN所在device的内存已满，意味着就将从这个batch中丢弃已选中的token。
 
-![image-20251013224203875](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013224203875.png)
+![image-20251013224203875](media/4-17.png)
 
 ### softmax不稳定
 
 训练loss下降不稳定，最好别用softmax，改用z-loss。
 
-![image-20251013224632154](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013224632154.png)
+![image-20251013224632154](media/4-18.png)
 
-![image-20251013224644467](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013224644467.png)
+![image-20251013224644467](media/4-19.png)
 
 ### fine tune过拟合
 
@@ -132,7 +132,7 @@ MoE models具有随机性，路由（routing）和容量计算都是在整个 ba
 * MoE和dense交叉使用
 * 使用更大的数据集
 
-![image-20251013224855530](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013224855530.png)
+![image-20251013224855530](media/4-20.png)
 
 ## upcycling
 
@@ -142,13 +142,13 @@ MoE models具有随机性，路由（routing）和容量计算都是在整个 ba
 * 随机初始化 Router（gating network）
 * 继续训练
 
-![image-20251013225434312](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251013225434312.png)
+![image-20251013225434312](media/4-21.png)
 
 ## DeepSeek MoE
 
 ### DeepSeek V1
 
-![image-20251014115816190](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014115816190.png)
+![image-20251014115816190](media/4-22.png)
 
 ### DeepSeek V2
 
@@ -168,14 +168,14 @@ Communication balancing loss – balancing both communication in and out:
 - 虽然设备被选中次数可能均匀，但传入 / 传出 token 的数量可能极不均匀；
 - 发生这种通信不平衡，就会产生延迟、带宽拥堵或通信热点，影响整体吞吐率。
 
-![image-20251014120016097](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014120016097.png)
+![image-20251014120016097](media/4-23.png)
 
 ### DeepSeek V3
 
 * 用Sigmoid对路由选择做归一化，然后用Softmax计算experts权重
 * per-expert bias
 
-![image-20251014121311523](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014121311523.png)
+![image-20251014121311523](media/4-24.png)
 
 ## MLA : Multihead Latent Attention
 
@@ -183,5 +183,5 @@ express the Q, K, V as functions of a lower-dim, ‘latent’ activation
 
 但是不适用于RoPE，因为RoPE是在 $Q$ 和 $K$ 加入位置信息。
 
-![image-20251014121406053](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014121406053.png)
+![image-20251014121406053](media/4-25.png)
 

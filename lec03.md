@@ -8,13 +8,13 @@
 
 Transformer 中使用预规范（Pre-Norm）效果更好，是因为它保留了残差路径的恒等梯度流，避免 LayerNorm 干扰梯度，避免了深层模型的梯度消失和优化不稳定问题，从而显著提高了深层模型的训练稳定性。
 
-![image-20251009210041060](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009210041060.png)
+![image-20251009210041060](media/3-1.png)
 
-![image-20251009210409157](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009210409157.png)
+![image-20251009210409157](media/3-2.png)
 
-![image-20251009210532543](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009210532543.png)
+![image-20251009210532543](media/3-3.png)
 
-<img src="/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009212952501.png" alt="image-20251009212952501" style="zoom:150%;" />
+![image-20251009210532543](media/3-4.png)
 
 ### RMS Norm
 
@@ -26,21 +26,21 @@ RMS Norm的效果和Layer Nrom一样好，但是训练速度更快？
 
 norm的作用：不让数据在规模上漂移。
 
-![image-20251009210600396](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009210600396.png)
+![image-20251009210600396](media/3-5.png)
 
-![image-20251009213011288](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009213011288.png)
+![image-20251009213011288](media/3-6.png)
 
 ### FFN without bias
 
 不用bias，内存操作更少，且更加稳定训练。
 
-![image-20251009212349542](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009212349542.png)
+![image-20251009212349542](media/3-7.png)
 
 ### Activations
 
 #### common activation
 
-![image-20251009213407445](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009213407445.png)
+![image-20251009213407445](media/3-8.png)
 
 #### Gated Activation
 
@@ -56,9 +56,9 @@ But evidence points towards somewhat consistent gains from Swi/GeGLU.
 
 Note: Gated models use smaller dimensions for the $d_{ff}$ by 2/3。
 
-![image-20251009214247193](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009214247193.png)
+![image-20251009214247193](media/3-9.png)
 
-![image-20251009214623597](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009214623597.png)
+![image-20251009214623597](media/3-10.png)
 
 ### Serial vs Parallel layers
 
@@ -66,7 +66,7 @@ Note: Gated models use smaller dimensions for the $d_{ff}$ by 2/3。
 
 但是Serial的表达拟合能力更强。
 
-![image-20251009215307949](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009215307949.png)
+![image-20251009215307949](media/3-11.png)
 
 ### Positinal encoding: RoPE
 
@@ -74,15 +74,15 @@ Converge to RoPE embedding！
 
 内积对任意的旋转都不变，相对位置得到保留。在attention层的q和k调用。
 
-![image-20251009215458400](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009215458400.png)
+![image-20251009215458400](media/3-12.png)
 
-![image-20251009215522546](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009215522546.png)
+![image-20251009215522546](media/3-13.png)
 
-![image-20251009215624089](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009215624089.png)
+![image-20251009215624089](media/3-14.png)
 
 ### Summary
 
-![image-20251009215417735](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009215417735.png)
+![image-20251009215417735](media/3-15.png)
 
 ## Hyperparameters
 
@@ -90,27 +90,27 @@ Converge to RoPE embedding！
 
 对于Gated Activations来说，$d_{ff} = \frac{8}{3} \times d_{model}$。
 
-![image-20251009220007288](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220007288.png)
+![image-20251009220007288](media/3-16.png)
 
-![image-20251009220202999](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220202999.png)
+![image-20251009220202999](media/3-17.png)
 
 ### $d_{model} / (d_{head} \times n_{head}) = 1.$
 
 当头的数量过多，每个头的size过小，捕捉上下文依赖的能力就没那么好。
 
-![image-20251009220345984](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220345984.png)
+![image-20251009220345984](media/3-18.png)
 
-![image-20251009220423533](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220423533.png)
+![image-20251009220423533](media/3-19.png)
 
-![image-20251009220551966](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220551966.png)
+![image-20251009220551966](media/3-20.png)
 
 ### Aspect ratios: $d_{model} / n_{layer} $
 
-![image-20251009220646774](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009220646774.png)
+![image-20251009220646774](media/3-21.png)
 
 ### vocabulary size
 
-![image-20251009221023929](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009221023929.png)
+![image-20251009221023929](media/3-22.png)
 
 ### 正则化：dropout, weight decay
 
@@ -124,7 +124,7 @@ LLM训练时weight decay的作用？
 * LLM的参数量巨大，已经不再存在过拟合问题了。
 * Dropout 会干扰梯度稳定性和收敛速度，不能减少训练损失。
 
-![image-20251009221154170](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009221154170.png)
+![image-20251009221154170](media/3-23.png)
 
 中图是快速学习率衰减：
 
@@ -137,13 +137,13 @@ LLM训练时weight decay的作用？
 * 在固定学习率下，weight decay 起到稳定训练、抑制参数膨胀的作用；
 * 但过大时，会直接阻碍优化，使模型收敛更慢。
 
-![image-20251009221841124](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251009221841124.png)
+![image-20251009221841124](media/3-24.png)
 
 ## z-loss
 
 防止softmax过程中的梯度消失/爆炸问题。
 
-![image-20251014111232249](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014111232249.png)
+![image-20251014111232249](media/3-25.png)
 
 ## QK norm
 
@@ -167,7 +167,7 @@ Saving inference costs by reducing the number of heads，解决KV cache爆炸的
 - 因为所有 heads 共用 K/V，表示能力略有下降；
 - 对极复杂任务或长上下文可能略微退化。
 
-![image-20251014113120741](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014113120741.png)
+![image-20251014113120741](media/3-26.png)
 
 ### GQA：Grouped-Query Attention（分组查询注意力）
 
@@ -185,19 +185,19 @@ Saving inference costs by reducing the number of heads，解决KV cache爆炸的
 - 保留了一定的多样性（每组仍独立）；
 - 效果几乎与完整 MHA 一致。
 
-![image-20251014113159409](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014113159409.png)
+![image-20251014113159409](media/3-27.png)
 
 ### 实验结果
 
-![image-20251014113405645](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014113405645.png)
+![image-20251014113405645](media/3-28.png)
 
 ## Sparse attention
 
 降低注意力计算的复杂度，从 $O(n^2)$ 降到近似线性。
 
-![image-20251014113803291](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014113803291.png)
+![image-20251014113803291](media/3-29.png)
 
 ## Sliding window attention
 
-![image-20251014113827253](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251014113827253.png)
+![image-20251014113827253](media/3-30.png)
 

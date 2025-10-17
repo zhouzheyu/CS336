@@ -12,7 +12,7 @@ Example: given a Common Crawl dump and 32 H100s for 2 weeks, what should you do?
 
 Design decisions:
 
-![image-20251005193948096](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251005193948096.png)
+![image-20251005193948096](media/1.1.png)
 
 ## basics
 
@@ -20,7 +20,7 @@ Design decisions:
 
 Tokenizers convert between strings and sequences of integers (tokens)
 
-![image-20251005194130940](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251005194130940.png)
+![image-20251005194130940](media/1.2.png)
 
 This course: Byte-Pair Encoding (BPE) tokenizer
 
@@ -28,7 +28,7 @@ This course: Byte-Pair Encoding (BPE) tokenizer
 
 Starting point: original Transformer.
 
-![image-20251005194243552](/Users/zhouzheyu/Library/Application Support/typora-user-images/image-20251005194243552.png)
+![image-20251005194243552](media/1.3.png)
 
 Variants:
 
@@ -264,7 +264,7 @@ Data: generate multiple responses using model (e.g., [A, B]) to a given prompt.
 
 User provides preferences (e.g., A < B or A > B).
 
-```
+```python
 preference_data: list[PreferenceExample] = [
  PreferenceExample(
      history=[
@@ -302,7 +302,7 @@ Basic idea: *train* the tokenizer on raw text to automatically determine the voc
 
 Intuition: common sequences of characters are represented by a single token, rare sequences are represented by many tokens.
 
-```
+```python
 def train_bpe(string: str, num_merges: int) -> BPETokenizerParams:  # @inspect string, @inspect num_merges
  indices = list(map(int, string.encode("utf-8")))  # @inspect indices
  merges: dict[tuple[int, int], int] = {}  # index1, index2 => merged index
