@@ -22,7 +22,7 @@ GPU有更多的计算单元（ALU），同时有更少的控制和缓存。
 
 ### GPU结构
 
-* 计算单元：若干个SM，一个SM又包含多个SP，分别执行一个线程。
+* 计算单元：若干个SM。一个SM又包含多个SP，分别执行一个线程。
 * 存储器：距离SM越近，访问速度越快。
   * shared memory和L1 cache：SM内部
   * L2 cache：GPU芯片上
@@ -38,14 +38,23 @@ GPU使用的是SIMT（单指令多线程）架构。
 
 * 每个 Block 会被分配在一个 SM 的 shared memory 执行，SM 内部再以 Warp 为单位调度线程。
 * warp由若干个线程组成（通常32个），来自同一个 warp 的内存访问同时发生。
-
 * 相同指令不同数据：一个 warp 会执行同一条指令，但每个线程处理自己的数据。
+* warp的作用：减少了控制机制的数量，因为这些线程都是同时执行的，不需要为每个线程都配备一个控制机制。
 
 ![image-20251028112541848](media/5-6.png)
 
 ### Memory model
 
-**Information that goes across blocks need to be read/written to global memory (slow).**
+* Host：指的是CPU端的内存。
+  * GPU 无法直接访问 CPU 内存，需要通过 PCIe 或 NVLink 通信。
+  * Host 负责把数据传入 GPU 的 global memory，或者从中取出结果。
+* Global Memory：不同Block之间共享数据必须经过global memory。
+* Block：每个 Block通常由一个SM执行。内部包含：
+  * Shared Memory：仅 block 内线程共享，block 外线程看不到。
+  * Registers：每个线程**私有**的最快速存储，存放局部变量、临时计算值。
+  * Threads：
+    - 每个线程运行相同的 kernel 代码。
+    - 可以访问自己的寄存器、当前 block 的 shared memory，以及整个 GPU 的 global memory。
 
 ![image-20251028113009720](media/5-7.png)
 
