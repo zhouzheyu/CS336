@@ -60,11 +60,11 @@ if torch.cuda.is_available():
 
 更好地了解程序在硬件上的实际执行情况。查看哪个cuda kernel被调用，不同的matrix size，调用的cuda kernel不同。
 
-**也要进行warmup和torch.cuda.synchronize()。**
+**也要进行 warmup 和 torch.cuda.synchronize() 。**
 
 瓶颈一直都是GPU：CPU可以提前运行并将命令排队到CPU中。CPU和GPU是分开的。
 
-使用PyTorch内置的profiler：
+**使用PyTorch内置的profiler：**
 
 ```python
 import torch
