@@ -24,10 +24,10 @@ All-Reduce = Reduce-Scatter + All-Gather。
 
 ## Data parallelism
 
-### Naïve data parallel
-
 * split the elements of B sized batch across M machines. 
-* Exchange gradients to synchronize.
+* **Exchange gradients to synchronize.**
+
+### Naïve data parallel
 
 How does this do?
 
@@ -144,9 +144,7 @@ identity：无需通信的。
 
 由于TP的高频通信要求，常在一台服务器内的GPU跑。
 
-f 和 g 都是 synchronize barria。
-
-TP最后做一次All-Reduce。
+**$f$ 和 $g$ 都是 synchronize barria，最后要做一次All-Reduce。**
 
 ![image-20251112164318869](media/7-19.png)
 
@@ -172,7 +170,7 @@ TP最后做一次All-Reduce。
 
 LayerNorm 和 Dropout 层不依赖序列之间的关联，适合做SP。
 
-reduce-scatter -- SP -- All-Gather。
+**reduce-scatter -- SP -- All-Gather。**
 
 ![image-20251112171150282](media/7-26.png)
 
